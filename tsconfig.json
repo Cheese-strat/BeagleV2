@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+		"experimentalDecorators": true,
+        "resolveJsonModule": true,              
+        "target": "ESNEXT",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "rootDir": "./",
+        "removeComments": true,
+        "importHelpers": false,
+        "downlevelIteration": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true, 
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "types": [],      
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": [
+        "./src"
+    ],
+    "exclude": [
+        "./node_modules/"
+    ]
+}

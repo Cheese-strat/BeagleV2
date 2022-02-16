@@ -1,0 +1,42 @@
+{
+    "name": "beaglev2",
+    "version": "1.0.0",
+    "description": "Open source discord bot",
+    "main": "./src/main.js",
+    "scripts": {
+        "start": "node ./dist/src/main.js",
+        "prestart": "tsc --pretty --resolveJsonModule"
+    },
+    "author": "Cheese_strat",
+    "license": "ISC",
+    "dependencies": {
+        "@discordjs/builders": "^0.12.0",
+        "@discordjs/rest": "^0.3.0",
+        "@types/node": "^17.0.18",
+        "discord-api-types": "^0.27.1",
+        "discord.js": "^13.6.0",
+        "erela.js": "^2.3.3",
+        "erela.js-spotify": "^1.2.0",
+        "fs": "^0.0.1-security",
+        "typescript": "^4.5.5"
+    },
+    "repository": "https://github.com/Cheese-strat/BeagleV2",
+    "prettier": {
+        "arrowParens": "avoid",
+        "bracketSpacing": true,
+        "embeddedLanguageFormatting": "off",
+        "endOfLine": "crlf",
+        "htmlWhitespaceSensitivity": "strict",
+        "jsxBracketSameLine": false,
+        "jsxSingleQuote": false,
+        "parser": "typescript",
+        "printWidth": 160,
+        "proseWrap": "always",
+        "quoteProps": "consistent",
+        "semi": true,
+        "singleQuote": false,
+        "tabWidth": 4,
+        "trailingComma": "all",
+        "useTabs": true
+    }
+}
