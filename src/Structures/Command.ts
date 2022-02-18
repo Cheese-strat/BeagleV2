@@ -1,13 +1,11 @@
+//import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
+import BeagleClient from "./Client";
 
 export default interface Command {
 	displayName: string;
-	description: string;
-	args: {
-		required: boolean;
-		case: boolean;
-		name: string;
-	}[];
+    internalName?:Lowercase<string>
 	cooldown: number;
-	execute(interaction: CommandInteraction): void;
+	execute(interaction: CommandInteraction,Client:BeagleClient<true>): Promise<void>;
+    build:any
 }

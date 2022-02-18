@@ -1,17 +1,22 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import { Client, ClientOptions } from "discord.js";
-//import SlashManager from "../Structures/Helpers/SlashManager"
 import { Manager } from "erela.js";
+import Spotify from "erela.js-spotify";
 import config from "../../config.json";
+import Command from "./Command";
 import SlashManager from "./Helpers/SlashManager";
-export default class BeagleClient extends Client {
+
+export default class BeagleClient<t extends boolean> extends Client<t> {
 	music: Manager;
-    GuildCommandList:any[];
+	GuildCommandList: Map<string, Command>;
 	constructor(opt: ClientOptions) {
 		super(opt);
-        this.GuildCommandList=[];
+		this.GuildCommandList = new Map();
 		this.music = new Manager({
 			nodes: [config.LavaLink],
+			plugins: [
+				// Initiate the plugin and pass the two required options.
+				new Spotify(config.spotifyAccess),
+			],
 			// Method to send voice data to Discord
 			send: (id, payload) => {
 				const guild = this.guilds.cache.get(id);
@@ -23,35 +28,41 @@ export default class BeagleClient extends Client {
 			this.music.init(this.user!.id);
 			console.log(`Logged in as ${this.user!.tag}`);
 		});
-        this.music.on("nodeConnect", node => {
-            console.log(`Node "${node.options.identifier}" connected.`);
-        });
-        
-        this.music.on("nodeError", (node, error) => {
-            console.log(`Node "${node.options.identifier}" encountered an error: ${error.message}.`);
-        });
-        this.on('interactionCreate', async interaction => {
-            if (!interaction.isCommand()) return;
-        
-            const { commandName } = interaction;
-        
-            if (commandName === 'ping') {
-                await interaction.reply('Pong!');
-            } else if (commandName === 'beep') {
-                await interaction.reply('Boop!');
-            }
-            
-        });
+		this.music.on("nodeConnect", node => {
+			console.log(`Node "${node.options.identifier}" connected.`);
+		});
+
+		this.music.on("nodeError", (node, error) => {
+			console.log(`Node "${node.options.identifier}" encountered an error: ${error.message}.`);
+		});
+		this.on("interactionCreate", async interaction => {
+			if (!interaction.isCommand()) return;
+
+			const command = this.GuildCommandList.get(interaction.commandName);
+			if (command) {
+				await command.execute(interaction, this as BeagleClient<true>);
+				console.log(`completed command: ${command.displayName}`);
+			}
+		});
+		//this.music.on("trackStart", (player, track) => {
+		//const channel = this.channels.cache.get(player.textChannel!) as TextChannel;
+		// Send a message when the track starts playing with the track name and the requester's Discord tag, e.g. username#discriminator
+		//channel.send(`Now playing: \`${track.title}\`.`);
+		//});
+
+		// Emitted the player queue ends
+		this.music.on("queueEnd", player => {
+			//const channel = client.channels.cache.get(player.TextChannel!) as Textchannel;
+			//channel.send("Queue has ended.");
+			player.disconnect();
+			player.destroy();
+		});
 	}
-    async startup():Promise<void>{
-        console.log ("logging in...")
-        const commands = [
-            new SlashCommandBuilder().setName('ping').setDescription('Replies with pong!'),
-            new SlashCommandBuilder().setName('server').setDescription('Replies with server info!'),
-            new SlashCommandBuilder().setName('user').setDescription('Replies with user info!'),
-        ]
-        SlashManager(this,commands)
-        super.login(config.token)
-        return
-    }
+	async startup(): Promise<void> {
+		console.log("logging in...");
+
+		SlashManager(this as BeagleClient<false>, "R:\\Programming\\BeagleV2\\dist\\src\\Commmands");
+		super.login(config.token);
+		return;
+	}
 }

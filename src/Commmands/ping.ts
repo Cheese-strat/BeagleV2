@@ -1,24 +1,23 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import Command from "src/Structures/Command";
 
-/*export default {
-	data: new SlashCommandBuilder().setName("ping").setDescription("Replies with Pong!"),
-	async execute(interaction: CommandInteraction) {
-		await interaction.reply("Pong!");
-	},
-};*/
 const cmd: Command = {
 	displayName: "Ping",
-	description: "Pings the bot and the discord API to test reaction time and latency",
-	args: [
-		{
-			required: false,
-			case: false,
-			name: "",
-		},
-	],
+	build: new SlashCommandBuilder()
+		.setName("ping")
+		.setDescription("Pings the bot and the discord API to test reaction time and latency"),
 	cooldown: 2,
-	execute(interaction) {
-		interaction.reply("Ping pong :)");
+	async execute(interaction) {
+		interaction.reply("pinging...");
+		const message = await interaction.fetchReply();
+		let ping: number;
+		if ("createdTimestamp" in message) {
+			ping = interaction.createdTimestamp - message.createdTimestamp;
+		} else {
+			ping = interaction.createdTimestamp - Number(message.timestamp);
+		}
+		interaction.editReply(`Pong! Latency is ${ping}ms.`);
+
 		return;
 	},
 };
