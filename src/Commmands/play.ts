@@ -30,7 +30,6 @@ const cmd: Command = {
 		//get the voice channel of the one that sent the command
 		//@ts-ignore
 		const channel = interaction.member?.voice?.channel;
-		console.log(interaction.member);
 		if (!channel) {
 			interaction.reply("I cant find the voice channel your in.");
 			return;
@@ -54,7 +53,7 @@ const cmd: Command = {
 
 			player!.play();
 		} else player!.queue.add(res.tracks[0]);
-		interaction.reply(`Now playing: ${res.tracks[0].title}, requested by ${interaction.member?.user.username}.`);
+		interaction.reply(`Added to queue: ${res.tracks[0].title}, requested by ${interaction.member?.user.username}.`);
 		//if (currentQueueSize! >= 1) {}
 		return;
 	},
