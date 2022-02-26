@@ -3,8 +3,8 @@ import { MessageEmbed } from "discord.js";
 import Command from "src/Structures/Command";
 
 const cmd: Command = {
-	displayName: "NowPlaying",
-	build: new SlashCommandBuilder().setName("nowplaying").setDescription("Shows the currently playing song"),
+	displayName: "np",
+	build: new SlashCommandBuilder().setName("np").setDescription("Shows the currently playing song"),
 	cooldown: 2,
 	async execute(interaction, Beagle) {
 		//@ts-ignore
