@@ -12,6 +12,7 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 	srcPath:string
 	constructor(opt: ClientOptions, srcPath:string) {
 		super(opt);
+		console.log(`srcpath=${srcPath}`);
 		this.srcPath = srcPath;
 		this.GuildCommandList = new Map();
 		this.music = new Manager({
