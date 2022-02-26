@@ -62,7 +62,7 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 	async startup(): Promise<void> {
 		console.log("logging in...");
 // the path given to this is incorrect so that when it is used in /Helpers is correctly paths, needs to check absolute paths in future
-		SlashManager(this as BeagleClient<false>, fs.opendirSync("../../Commmands").path);
+		SlashManager(this as BeagleClient<false>, "../../Commmands");
 		super.login(config.token);
 		return;
 	}
