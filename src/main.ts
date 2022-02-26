@@ -1,9 +1,9 @@
 import BeagleClient from "./Structures/Client";
 import IntentHelper from "./Structures/Helpers/IntentHelper"
 import { client_Options } from "../config.json";
+import path from "path"
 
-
-const client = new BeagleClient(IntentHelper(client_Options));
+const client = new BeagleClient(IntentHelper(client_Options), path.resolve("./"));
 
 console.log(`initializing Discord bot`);
 

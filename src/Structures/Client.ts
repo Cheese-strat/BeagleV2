@@ -4,12 +4,15 @@ import Spotify from "erela.js-spotify";
 import config from "../../config.json";
 import Command from "./Command";
 import SlashManager from "./Helpers/SlashManager";
+import path from "path"
 
 export default class BeagleClient<t extends boolean> extends Client<t> {
 	music: Manager;
 	GuildCommandList: Map<string, Command>;
-	constructor(opt: ClientOptions) {
+	srcPath:string
+	constructor(opt: ClientOptions, srcPath:string) {
 		super(opt);
+		this.srcPath = srcPath;
 		this.GuildCommandList = new Map();
 		this.music = new Manager({
 			nodes: [config.LavaLink],
@@ -60,8 +63,8 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 	}
 	async startup(): Promise<void> {
 		console.log("logging in...");
-// the path given to this is incorrect so that when it is used in /Helpers is correctly paths, needs to check absolute paths in future
-		SlashManager(this as BeagleClient<false>, "../../Commmands");
+		// the path given to this is incorrect so that when it is used in /Helpers is correctly paths, needs to check absolute paths in future
+		SlashManager(this as BeagleClient<false>, path.join(this.srcPath ,"/Commmands"));
 		super.login(config.token);
 		return;
 	}
