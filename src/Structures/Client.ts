@@ -4,6 +4,7 @@ import Spotify from "erela.js-spotify";
 import config from "../../config.json";
 import Command from "./Command";
 import SlashManager from "./Helpers/SlashManager";
+import fs from "fs"
 
 export default class BeagleClient<t extends boolean> extends Client<t> {
 	music: Manager;
@@ -60,8 +61,8 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 	}
 	async startup(): Promise<void> {
 		console.log("logging in...");
-
-		SlashManager(this as BeagleClient<false>, "R:\\Programming\\BeagleV2\\dist\\src\\Commmands");
+// the path given to this is incorrect so that when it is used in /Helpers is correctly paths, needs to check absolute paths in future
+		SlashManager(this as BeagleClient<false>, fs.opendirSync("../../Commmands").path);
 		super.login(config.token);
 		return;
 	}
