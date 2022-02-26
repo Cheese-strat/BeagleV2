@@ -4,7 +4,6 @@ import Spotify from "erela.js-spotify";
 import config from "../../config.json";
 import Command from "./Command";
 import SlashManager from "./Helpers/SlashManager";
-import fs from "fs"
 
 export default class BeagleClient<t extends boolean> extends Client<t> {
 	music: Manager;
