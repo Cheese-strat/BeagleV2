@@ -21,9 +21,8 @@ const cmd: Command = {
 		if (!player || !player.playing) return interaction.reply("There is no music playing right now");
 		const Track = player.queue.current!;
 
-		/*
-			 if its longer than an hour, add the hours onto the start
-			*/
+		//if its longer than an hour, add the hours onto the start
+
 		const milliseconds = Track.duration || 0;
 		const seconds = Math.floor((milliseconds / 1000) % 60);
 

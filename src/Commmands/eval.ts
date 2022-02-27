@@ -10,7 +10,7 @@ const cmd: Command = {
 		.setDescription("eval code")
 		.addStringOption(option => option.setName("input").setDescription("the code to run").setRequired(true)),
 	cooldown: 2,
-	async execute(interaction, _Beagle) {
+	async execute(interaction, Beagle) {
 		async function clean(Input: any) {
 			if (Input instanceof Promise) Input = await Input;
 			if (typeof Input !== "string") Input = inspect(Input, { depth: 0 });
@@ -23,12 +23,43 @@ const cmd: Command = {
 			interaction.reply("you do not have perms");
 			return;
 		}
-		const Input = interaction.options.getString("input");
-		//?.replace(/.*```\w*\s*(.*)\s*```.*/s, "$1").replace(/[“”‘’]/g, '"').trim();
+		let Input = interaction.options.getString("input");
 		if (!Input) {
 			console.log("!ono");
 			return;
 		}
+		async function GetMessage(messageID: string, channelID: string) {
+			const channel = await Beagle.channels.fetch(channelID);
+			if (channel && channel.type === "GUILD_TEXT") {
+				return await channel.messages.fetch(messageID, { cache: true });
+			}
+			return false;
+		}
+		if (Input.match(/^\d+$/)) {
+			const message = await GetMessage(Input, interaction.channelId);
+			if (!message) {
+				interaction.reply("There was no message found with that ID in this channel");
+				return;
+			}
+			Input = message.content;
+		}
+		if (Input.startsWith("https://discord.com/channels/")) {
+			let IDarray = Input.slice(29).split("/");
+			if (IDarray.length >= 2) {
+				IDarray = IDarray.slice(-2, IDarray.length);
+				const message = await GetMessage(IDarray[1], IDarray[0]);
+                if (!message) {
+                    interaction.reply("There was no message found with that ID");
+                    return;
+                }
+                Input = message.content;
+			}
+		}
+
+		Input = Input.replace(/.*```\w*\s*(.*)\s*```.*/s, "$1")
+			.replace(/[“”‘’]/g, '"')
+			.trim();
+
 		const language = interaction.options
 			.getString("input")
 			?.replace(/.*```(ts|js)?\n.*\s*```.*/s, "$1")
