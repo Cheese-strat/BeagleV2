@@ -23,7 +23,7 @@ async function SlashManager(client: BeagleClient<false>, cmdFolderPath: string) 
 	console.log("Started refreshing application (/) commands.");
 
 
-	await rest.put(Routes.applicationGuildCommands("631479292252913664", "744527014039519263"), { body: Array.from(client.GuildCommandList.values()).map(cmd=>cmd.build) })
+	await rest.put(Routes.applicationCommands("631479292252913664"), { body: Array.from(client.GuildCommandList.values()).map(cmd=>cmd.build) })
 		.then(() => console.log("Successfully registered application commands."))
 		.catch(console.error);
 
