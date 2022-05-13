@@ -50,12 +50,12 @@ const cmd: Command = {
 			
 				if (interaction.options.getString("category")==="killer") {
 					//random from list of surv perks
-					res = data.dbd.survivor[Math.floor(Math.random() * data.dbd.survivor.length)];
+					res = data.dbd.killer[Math.floor(Math.random() * data.dbd.killer.length)];
 					return interaction.reply(res);
 				}
 				if (interaction.options.getString("category")==="surv") {
 					//random from list of killer perks
-					res = data.dbd.killer[Math.floor(Math.random() * data.dbd.killer.length)];
+					res = data.dbd.survivor[Math.floor(Math.random() * data.dbd.survivor.length)];
 					return interaction.reply(res);
 				}
 			
