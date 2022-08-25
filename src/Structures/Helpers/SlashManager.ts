@@ -16,7 +16,8 @@ async function SlashManager(client: BeagleClient<false>, cmdFolderPath: string) 
 		const commandFiles = readdirSync(path).filter(file => file.endsWith(".js"));
 
 		for (const file of commandFiles) {
-			const ImportPath = `${path}\\${file}`
+			const ImportPath = join(path,file);
+		if (!isAbsolute(ImportPath)) throw new Error("Invalid path: " + ImportPath.toString());
 			console.log(ImportPath)
 			const command: Command = (await import(ImportPath)).default;
 			command.internalName = command.displayName.toLowerCase() as Lowercase<string>;
