@@ -1,4 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+//import { ChannelType } from "discord-api-types/v10";
+import { ChatInputCommandInteraction } from "discord.js";
 import Command from "src/Structures/Command";
 import { transpile } from "typescript";
 import { inspect } from "util";
@@ -10,7 +12,7 @@ const cmd: Command = {
 		.setDescription("eval code")
 		.addStringOption(option => option.setName("input").setDescription("the code to run").setRequired(true)),
 	cooldown: 2,
-	async execute(interaction, Beagle) {
+	async execute(interaction:ChatInputCommandInteraction, Beagle) {
 		async function clean(Input: any) {
 			if (Input instanceof Promise) Input = await Input;
 			if (typeof Input !== "string") Input = inspect(Input, { depth: 0 });
@@ -30,8 +32,9 @@ const cmd: Command = {
 		}
 		async function GetMessage(messageID: string, channelID: string) {
 			const channel = await Beagle.channels.fetch(channelID);
-			if (channel && channel.type === "GUILD_TEXT") {
-				return await channel.messages.fetch(messageID, { cache: true });
+			///@ts-ignore
+			if (channel && channel.type === 0) {
+				return await channel.messages.fetch(messageID);
 			}
 			return false;
 		}
@@ -48,11 +51,11 @@ const cmd: Command = {
 			if (IDarray.length >= 2) {
 				IDarray = IDarray.slice(-2, IDarray.length);
 				const message = await GetMessage(IDarray[1], IDarray[0]);
-                if (!message) {
-                    interaction.reply("There was no message found with that ID");
-                    return;
-                }
-                Input = message.content;
+				if (!message) {
+					interaction.reply("There was no message found with that ID");
+					return;
+				}
+				Input = message.content;
 			}
 		}
 
@@ -84,16 +87,17 @@ const cmd: Command = {
 			evaledOutput = await clean(evaledOutput);
 		} catch (e) {
 			if (e instanceof Error) {
-				return interaction.reply(`error:${e.message}`);
+				interaction.reply(`error:${e.message}`);
+				return;
 			}
-			return interaction.reply(`error:${e}`);
+			interaction.reply(`error:${e}`);
+			return;
 		}
 		const EvalTime = process.hrtime(StartTime);
 		const FormattedTime = `${(EvalTime[0] * 1e9 + EvalTime[1] / 1e6).toFixed(2)}ms`;
 
-		return interaction.reply(
-			`**Output:**\n\`\`\`js\n${evaledOutput.length < 1950 ? evaledOutput : evaledOutput.slice(1950)}\`\`\`Time: **- ${FormattedTime}**`,
-		);
+		interaction.reply(`**Output:**\n\`\`\`js\n${evaledOutput.length < 1950 ? evaledOutput : evaledOutput.slice(1950)}\`\`\`Time: **- ${FormattedTime}**`);
+		return;
 	},
 };
 export default cmd;

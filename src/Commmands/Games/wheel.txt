@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { ChatInputCommandInteraction } from "discord.js";
 import Command from "src/Structures/Command";
 import data from "./wheel-data.json";
 
@@ -14,12 +15,7 @@ const cmd: Command = {
 				.setName("apex")
 				.setDescription("APE THEM JOHN!")
 				.addStringOption(option =>
-					option
-						.setName("category")
-						.setDescription("catfield")
-						.setRequired(false)
-						.addChoice("Legend", "leg")
-						.addChoice("Weapon", "gun"),
+					option.setName("category").setRequired(false).addChoices({ name: "Legend", value: "leg" }, { name: "Weapon", value: "gun" }),
 				),
 		)
 		.addSubcommand(subcommand =>
@@ -31,57 +27,60 @@ const cmd: Command = {
 						.setName("category")
 						.setDescription("catfield")
 						.setRequired(true)
-						.addChoice("Killer", "killer")
-						.addChoice("Survivor", "surv"),
+						.addChoices({ name: "Killer", value: "killer" }, { name: "Survivor", value: "surv" }),
 				),
 		),
 
-	async execute(interaction) {
+	async execute(interaction: ChatInputCommandInteraction) {
 		let res = "";
 		if (interaction.options.getSubcommand() === "phasmophobia") {
 			res = data.phasmophobia[Math.floor(Math.random() * data.phasmophobia.length)];
-			return interaction.reply(res);
+			interaction.reply(res);
+			return;
 		}
 
 		//const secondaryCat = msg.args[1];
-        console.log(interaction.options)
-        console.log(interaction.options.getString("category"))
 		if (interaction.options.getSubcommand() === "dbd") {
-			
-				if (interaction.options.getString("category")==="killer") {
-					//random from list of surv perks
-					res = data.dbd.killer[Math.floor(Math.random() * data.dbd.killer.length)];
-					return interaction.reply(res);
-				}
-				if (interaction.options.getString("category")==="surv") {
-					//random from list of killer perks
-					res = data.dbd.survivor[Math.floor(Math.random() * data.dbd.survivor.length)];
-					return interaction.reply(res);
-				}
-			
+			if (interaction.options.getString("category") === "killer") {
+				//random from list of surv perks
+				res = data.dbd.killer[Math.floor(Math.random() * data.dbd.killer.length)];
+				interaction.reply(res);
+				return;
+			}
+			if (interaction.options.getString("category") === "surv") {
+				//random from list of killer perks
+				res = data.dbd.survivor[Math.floor(Math.random() * data.dbd.survivor.length)];
+				interaction.reply(res);
+				return;
+			}
+
 			//random from conjoined list
 			res = ":)";
-			return interaction.reply(res);
+			interaction.reply(res);
+			return;
 		}
 
-		if (interaction.options.getSubcommand() ==="apex") {
+		if (interaction.options.getSubcommand() === "apex") {
 			if (interaction.options.getString("category")) {
-				if (interaction.options.getString("category")==="leg") {
+				if (interaction.options.getString("category") === "leg") {
 					//random from list of legends
 					res = data.apex.characters[Math.floor(Math.random() * data.apex.characters.length)];
-					return interaction.reply(res);
+					interaction.reply(res);
+					return;
 				}
-				if (interaction.options.getString("category")==="gun") {
+				if (interaction.options.getString("category") === "gun") {
 					//random from list of guns
 					res = data.apex.weapons[Math.floor(Math.random() * data.apex.weapons.length)];
-					return interaction.reply(res);
+					interaction.reply(res);
+					return;
 				}
 			}
 			//random from one each
 			res = `Character: ${data.apex.characters[Math.floor(Math.random() * data.apex.characters.length)]}\n`;
 			res += `Weapon: ${data.apex.weapons[Math.floor(Math.random() * data.apex.weapons.length)]}`;
 		}
-		return interaction.reply(res);
+		interaction.reply(res);
+		return;
 	},
 };
 export default cmd;

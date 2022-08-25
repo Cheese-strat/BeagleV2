@@ -4,8 +4,9 @@ import BeagleClient from "./Client";
 
 export default interface Command {
 	displayName: string;
-    internalName?:Lowercase<string>
+    internalName?:Lowercase<string>;
 	cooldown: number;
+	category?: string;
 	execute(interaction: CommandInteraction,Client:BeagleClient<true>): Promise<void>;
     build:any
 }

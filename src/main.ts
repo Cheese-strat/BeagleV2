@@ -9,7 +9,7 @@ console.log(`initializing Discord bot`);
 
 // THIS IS REQUIRED. Send raw events to Erela.js
 client.on("raw", d => client.music.updateVoiceState(d));
-
+Error.stackTraceLimit = Infinity;
 client.startup();
 ["uncaughtException", "warning", "unhandledRejection"].forEach(p => process.on(p, console.error));
 

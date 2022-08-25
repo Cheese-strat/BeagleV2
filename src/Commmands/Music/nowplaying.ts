@@ -1,10 +1,11 @@
+///@ts-nocheck
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed } from "discord.js";
+import { EmbedBuilder } from "discord.js";
 import Command from "src/Structures/Command";
 
 const cmd: Command = {
 	displayName: "np",
-	build: new SlashCommandBuilder().setName("np").setDescription("Shows the currently playing song"),
+	build: new SlashCommandBuilder().setName("nowplaying").setDescription("Shows the currently playing song"),
 	cooldown: 2,
 	async execute(interaction, Beagle) {
 		//@ts-ignore
@@ -17,8 +18,8 @@ const cmd: Command = {
 
 		// if your adding another song to the queue (no need to make a player)
 		let player = Beagle.music.get(channel.guild.id);
-
 		if (!player || !player.playing) return interaction.reply("There is no music playing right now");
+
 		const Track = player.queue.current!;
 
 		//if its longer than an hour, add the hours onto the start
@@ -44,8 +45,8 @@ const cmd: Command = {
 
 		let duration = output.join(", ");
 		console.log(duration);
-		const Embed = new MessageEmbed();
-		Embed.setFields([
+		const Embed = new EmbedBuilder();
+		Embed.add([
 			{ name: "Author: ", value: Track.author!, inline: false },
 			{ name: "Length: ", value: duration, inline: false },
 		]);

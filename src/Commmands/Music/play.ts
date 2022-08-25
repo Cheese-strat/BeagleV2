@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { ChatInputCommandInteraction } from "discord.js";
 import { Player } from "erela.js";
 import Command from "src/Structures/Command";
 
@@ -9,7 +10,7 @@ const cmd: Command = {
 		.setDescription("play <url>")
 		.addStringOption(option => option.setName("url").setDescription("the url to play").setRequired(true)),
 	cooldown: 1,
-	async execute(interaction, Beagle) {
+	async execute(interaction: ChatInputCommandInteraction, Beagle) {
 		let res;
 		try {
 			// Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
@@ -22,10 +23,14 @@ const cmd: Command = {
 			}
 		} catch (err: any) {
 			console.log(err);
-			return interaction.reply(`there was an error while searching`);
+			interaction.reply(`there was an error while searching`);
+			return;
 		}
 
-		if (res.loadType === "NO_MATCHES") return interaction.reply("there was no tracks found with that query.");
+		if (res.loadType === "NO_MATCHES") {
+			interaction.reply("there was no tracks found with that query.");
+			return;
+		}
 
 		//get the voice channel of the one that sent the command
 		//@ts-ignore

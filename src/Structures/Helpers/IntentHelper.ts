@@ -1,6 +1,6 @@
-import { ClientOptions, Intents } from "discord.js";
+import { ClientOptions, GatewayIntentBits  } from "discord.js";
 
 function IntentHelper(options:Omit<ClientOptions, "intents">):ClientOptions{
-    return {...options,intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.GUILD_VOICE_STATES]}
+    return {...options,intents:[GatewayIntentBits.Guilds,GatewayIntentBits.GuildVoiceStates]}
 }
 export default IntentHelper

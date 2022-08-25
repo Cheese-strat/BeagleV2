@@ -40,7 +40,7 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 			console.log(`Node "${node.options.identifier}" encountered an error: ${error.message}.`);
 		});
 		this.on("interactionCreate", async interaction => {
-			if (!interaction.isCommand()) return;
+			if (!interaction.isChatInputCommand()) return;
 
 			const command = this.GuildCommandList.get(interaction.commandName);
 			if (command) {

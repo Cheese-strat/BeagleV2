@@ -22,15 +22,18 @@
         "noFallthroughCasesInSwitch": true,
         "moduleResolution": "node",
         "baseUrl": "./",
-        "types": [],      
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "types": [],  
+        "skipLibCheck": true,    
+        "esModuleInterop": true,        
+        "forceConsistentCasingInFileNames": true,
+        "sourceMap":true
     },
+    
     "include": [
-        "./src"
+        "src/**/*"
     ],
     "exclude": [
-        "./node_modules/",
+        "./node_modules",
+        "node_modules"
     ]
 }
