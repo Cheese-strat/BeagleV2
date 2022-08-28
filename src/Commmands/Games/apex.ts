@@ -89,42 +89,42 @@ const cmd: Command = {
 				return;
 			}
 			const data: API_Res = response.data;
-			const MapEmbed = new EmbedBuilder().setTitle("Current Map Rotation");
+			const MapEmbed = new EmbedBuilder().setTitle("Current Map Rotation").setURL("https://apexlegendsstatus.com/current-map")
 
 			if (interaction.options.getString("gamemode") === "pubs") {
-				///@ts-ignore
-				const wikiLink = WikiLinkMap[data.battle_royale.current.code];
-				if (wikiLink !== undefined) MapEmbed.setURL(wikiLink);
+				const remainingTimer =
+					data.battle_royale.current.remainingMins > 60
+						? `${Math.floor(data.battle_royale.current.remainingMins / 60)}h, ${data.battle_royale.current.remainingMins % 60}m`
+						: `${data.battle_royale.current.remainingMins}m`;
 				MapEmbed.setDescription(data.battle_royale.current.map)
 					.setImage(data.battle_royale.current.asset)
-					.setFooter({ text: `The Next map is ${data.battle_royale.next.map}` });
+					.setFooter({ text: `The next map is ${data.battle_royale.next.map}, changing in ${remainingTimer}` });
 
 				await interaction.editReply({ embeds: [MapEmbed] });
 				return;
 			}
 			if (interaction.options.getString("gamemode") === "rankedbr") {
-				///@ts-ignore
-				const wikiLink = WikiLinkMap[data.ranked.current.code];
-				if (wikiLink !== undefined) MapEmbed.setURL(wikiLink);
-				MapEmbed.setDescription(data.ranked.current.map)
-					.setImage(data.ranked.current.asset)
-					.setFooter({ text: `The Next map is ${data.ranked.next.map}` });
+				MapEmbed.setDescription(data.ranked.current.map).setImage(data.ranked.current.asset);
+				//.setFooter({ text: `The Next map is ${data.ranked.next.map}` });
 
 				await interaction.editReply({ embeds: [MapEmbed] });
 				return;
 			}
 			if (interaction.options.getString("gamemode") === "arenas") {
+				const remainingTimer =
+					data.arenas.current.remainingMins > 60
+						? `${Math.floor(data.arenas.current.remainingMins / 60)}h, ${data.arenas.current.remainingMins % 60}m`
+						: `${data.arenas.current.remainingMins}m`;
 				MapEmbed.setDescription(data.arenas.current.map)
 					.setImage(data.arenas.current.asset)
-					.setFooter({ text: `The Next map is ${data.arenas.next.map}` });
+					.setFooter({ text: `The next map is ${data.arenas.next.map}, changing in ${remainingTimer}` });
 
 				await interaction.editReply({ embeds: [MapEmbed] });
 				return;
 			}
 			if (interaction.options.getString("gamemode") === "rankedarenas") {
-				MapEmbed.setDescription(data.arenasRanked.current.map)
-					.setImage(data.arenasRanked.current.asset)
-					.setFooter({ text: `The Next map is ${data.arenasRanked.next.map}` });
+				MapEmbed.setDescription(data.arenasRanked.current.map).setImage(data.arenasRanked.current.asset);
+				//.setFooter({ text: `The Next map is ${data.arenasRanked.next.map}` }); ranked doesnt change for a long time
 
 				await interaction.editReply({ embeds: [MapEmbed] });
 				return;
@@ -134,146 +134,145 @@ const cmd: Command = {
 };
 export default cmd;
 
-const WikiLinkMap = {
-	worlds_edge_rotation: "https://apexlegends.fandom.com/wiki/World's_Edge",
-	kings_canyon_rotation: "https://apexlegends.fandom.com/wiki/Kings_Canyon",
-	storm_point_rotation: "https://apexlegends.fandom.com/wiki/Storm_Point",
-};
+
+type MapAssetLink = `https://apexlegendsstatus.com/assets/maps/${string}.png`;
+
 interface API_Res {
 	battle_royale: {
 		current: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 			remainingSecs: number;
 			remainingMins: number;
-			remainingTimer: string;
+			remainingTimer: `${number}:${number}:${number}`;
 		};
 		next: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 		};
 	};
 	arenas: {
 		current: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 			remainingSecs: number;
 			remainingMins: number;
-			remainingTimer: string;
+			remainingTimer: `${number}:${number}:${number}`;
 		};
 		next: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 		};
 	};
 	ranked: {
 		current: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 			remainingSecs: number;
 			remainingMins: number;
-			remainingTimer: string;
+			remainingTimer: `${number}:${number}:${number}`;
 		};
 		next: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 		};
 	};
 	arenasRanked: {
 		current: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 			remainingSecs: number;
 			remainingMins: number;
-			remainingTimer: string;
+			remainingTimer: `${number}:${number}:${number}`;
 		};
 		next: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 		};
 	};
 	ltm: {
 		current: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
 			eventName: string;
-			asset: string;
+			isActive: false;
+			asset: MapAssetLink;
 			remainingSecs: number;
 			remainingMins: number;
-			remainingTimer: string;
+			remainingTimer: `${number}:${number}:${number}`;
 		};
 		next: {
 			start: number;
 			end: number;
-			readableDate_start: string;
-			readableDate_end: string;
+			readableDate_start: `${number}-${number}-${number} ${number}:00:00`;
+			readableDate_end: `${number}-${number}-${number} ${number}:00:00`;
 			map: string;
 			code: string;
 			DurationInSecs: number;
 			DurationInMinutes: number;
-			asset: string;
+			asset: MapAssetLink;
 		};
 	};
 }
