@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import Command from "src/Structures/Command";
-import wheel_data from "./wheel-data.json";
+import wheel_data from "./game-data.json";
 import axios from "axios";
 import config from "../../../config.json";
 
