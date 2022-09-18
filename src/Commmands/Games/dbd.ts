@@ -39,9 +39,12 @@ const cmd: Command = {
 					return;
 				}
 				const perkInfo_res: perkInfo_result = response.data;
+
 				field.name = perkInfo_res.name;
 				field.value = `${perkInfo_res.role} perk`;
 				fields.push(field);
+
+				
 			}
 			fields.splice(2, 0, {
 				name: "\u200B",
@@ -53,6 +56,7 @@ const cmd: Command = {
 				.addFields(fields)
 				.setFooter({ text: `The shrine will reset at: ` })
 				.setTimestamp(shrine_res.end);
+				
 
 			await interaction.editReply({ embeds: [ShrineEmbed] });
 			return;
