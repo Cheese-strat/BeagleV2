@@ -2,6 +2,8 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { ChatInputCommandInteraction } from "discord.js";
 import { Player } from "erela.js";
 import Command from "src/Structures/Command";
+import { logging } from "../../Structures/Helpers/Logging";
+const logger = logging.getLogger("Commands.Music.play");
 
 const cmd: Command = {
 	displayName: "Play",
@@ -11,6 +13,7 @@ const cmd: Command = {
 		.addStringOption(option => option.setName("url").setDescription("the url to play").setRequired(true)),
 	cooldown: 1,
 	async execute(interaction: ChatInputCommandInteraction, Beagle) {
+		
 		let res;
 		try {
 			// Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
@@ -22,7 +25,7 @@ const cmd: Command = {
 				return;
 			}
 		} catch (err: any) {
-			console.log(err);
+			logger.info(err);
 			interaction.reply(`there was an error while searching`);
 			return;
 		}

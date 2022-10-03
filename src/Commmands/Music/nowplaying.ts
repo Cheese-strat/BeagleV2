@@ -1,24 +1,31 @@
-///@ts-nocheck
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { EmbedBuilder } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import Command from "src/Structures/Command";
+import { logging } from "../../Structures/Helpers/Logging";
+const logger = logging.getLogger("Commands.Music.nowplaying");
 
 const cmd: Command = {
 	displayName: "nowplaying",
 	build: new SlashCommandBuilder().setName("nowplaying").setDescription("Shows the currently playing song"),
 	cooldown: 2,
-	async execute(interaction, Beagle) {
-		//@ts-ignore
-		const channel = interaction.member?.voice?.channel;
-		console.log(interaction.member);
+	async execute(interaction: ChatInputCommandInteraction<"cached" | "raw">, Beagle) {
+		let member = interaction.member;
+		if (!member || "joined_at" in member) {
+			logger.debug("member not cached");
+			const guild = await Beagle.guilds.fetch(interaction.guildId!);
+			member = await guild.members.fetch(interaction.user.id);
+		}
+		const channel = member.voice.channel;
 		if (!channel) {
 			interaction.reply("I cant find the voice channel your in.");
 			return;
 		}
-
 		// if your adding another song to the queue (no need to make a player)
 		let player = Beagle.music.get(channel.guild.id);
-		if (!player || !player.playing) return interaction.reply("There is no music playing right now");
+		if (!player || !player.playing) {
+			interaction.reply("There is no music playing right now");
+			return;
+		}
 
 		const Track = player.queue.current!;
 
@@ -44,9 +51,9 @@ const cmd: Command = {
 		}
 
 		let duration = output.join(", ");
-		console.log(duration);
+		logger.info(duration);
 		const Embed = new EmbedBuilder();
-		Embed.add([
+		Embed.addFields([
 			{ name: "Author: ", value: Track.author!, inline: false },
 			{ name: "Length: ", value: duration, inline: false },
 		]);

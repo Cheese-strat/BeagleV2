@@ -4,13 +4,14 @@ import Spotify from "erela.js-spotify";
 import config from "../../config.json";
 import Command from "./Command";
 import SlashManager from "./Helpers/SlashManager";
-import path from "path"
-
+import path from "path";
+import { logging } from "./Helpers/Logging";
+const logger = logging.getLogger("Client.base");
 export default class BeagleClient<t extends boolean> extends Client<t> {
 	music: Manager;
 	GuildCommandList: Map<string, Command>;
-	srcPath:string
-	constructor(opt: ClientOptions, srcPath:string) {
+	srcPath: string;
+	constructor(opt: ClientOptions, srcPath: string) {
 		super(opt);
 		console.log(`srcpath=${srcPath}`);
 		this.srcPath = srcPath;
@@ -30,22 +31,25 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 		});
 		this.once("ready", () => {
 			this.music.init(this.user!.id);
-			console.log(`Logged in as ${this.user!.tag}`);
+			logger.info(`Logged in as ${this.user!.tag}`);
+			["uncaughtException", "warning", "unhandledRejection"].forEach(p => process.on(p, logger.error));
 		});
 		this.music.on("nodeConnect", node => {
-			console.log(`Node "${node.options.identifier}" connected.`);
+			logger.info(`Node "${node.options.identifier}" connected.`);
 		});
 
 		this.music.on("nodeError", (node, error) => {
-			console.log(`Node "${node.options.identifier}" encountered an error: ${error.message}.`);
+			logger.info(`Node "${node.options.identifier}" encountered an error: ${error.message}.`);
 		});
 		this.on("interactionCreate", async interaction => {
-			if (!interaction.isChatInputCommand()) return;
+			if (!interaction.isChatInputCommand()) return;			
+			if (!interaction.inGuild()) return;
 
 			const command = this.GuildCommandList.get(interaction.commandName);
 			if (command) {
+				logger.info(`Running Command ${command.displayName}`)
 				await command.execute(interaction, this as BeagleClient<true>);
-				console.log(`completed command: ${command.displayName}`);
+				logger.info(`Completed Command: ${command.displayName}`);
 			}
 		});
 		//this.music.on("trackStart", (player, track) => {
@@ -63,9 +67,9 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 		});
 	}
 	async startup(): Promise<void> {
-		console.log("logging in...");
+		logger.info("logging in...");
 		// the path given to this is incorrect so that when it is used in /Helpers is correctly paths, needs to check absolute paths in future
-		SlashManager(this as BeagleClient<false>, path.join(this.srcPath ,"/Commmands"));
+		SlashManager(this as BeagleClient<false>, path.join(this.srcPath, "/Commmands"));
 		super.login(config.token);
 		return;
 	}

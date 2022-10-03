@@ -1,15 +1,19 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import Command from "../../Structures/Command";
+import { logging } from "../../Structures/Helpers/Logging";
+const logger = logging.getLogger("Commands.Music.skip");
 
 const cmd: Command = {
 	displayName: "Skip",
 	build: new SlashCommandBuilder().setName("skip").setDescription("Skips the current song"),
 	cooldown: 1,
 	async execute(interaction, Beagle) {
-//TODO rewrite as if else chain
+		
 
+		//TODO rewrite as if else chain
 		let member = interaction.member;
 		if (!member || "joined_at" in member) {
+			logger.debug("");
 			const guild = await Beagle.guilds.fetch(interaction.guildId!);
 			member = await guild.members.fetch(interaction.user.id);
 		}
@@ -43,4 +47,3 @@ const cmd: Command = {
 };
 
 export default cmd;
-

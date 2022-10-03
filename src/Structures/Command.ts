@@ -1,5 +1,5 @@
 //import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction } from "discord.js";
 import BeagleClient from "./Client";
 
 export default interface Command {
@@ -7,6 +7,6 @@ export default interface Command {
     internalName?:Lowercase<string>;
 	cooldown: number;
 	category?: string;
-	execute(interaction: CommandInteraction,Client:BeagleClient<true>): Promise<void>;
+	execute(interaction: ChatInputCommandInteraction<"cached"|"raw">,Client:BeagleClient<true>): Promise<void>;
     build:any
 }

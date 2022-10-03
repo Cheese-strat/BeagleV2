@@ -6,3 +6,5 @@ config.json
 /.vscode
 startup.bat
 .prettierrc
+stdout.log
+stderr.log

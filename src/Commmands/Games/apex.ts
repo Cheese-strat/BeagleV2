@@ -4,6 +4,8 @@ import Command from "src/Structures/Command";
 import wheel_data from "./game-data.json";
 import axios from "axios";
 import config from "../../../config.json";
+import { logging } from "../../Structures/Helpers/Logging";
+const logger = logging.getLogger("Commands.Games.APEX");
 
 const cmd: Command = {
 	displayName: "apex",
@@ -59,37 +61,45 @@ const cmd: Command = {
 		),
 	async execute(interaction: ChatInputCommandInteraction) {
 		let res = "";
+		logger.debug(`Subcommand: ${interaction.options.getSubcommand()}`);
 		if (interaction.options.getSubcommand() === "random") {
+			logger.debug(`String type: ${interaction.options.getString("type")}`);
 			if (interaction.options.getString("type") === "gun") {
+				logger.info(`getting a random gun`);
 				res = wheel_data.apex.weapons[Math.floor(Math.random() * wheel_data.apex.weapons.length)];
+				logger.debug(`picked: ${res}`);
 				interaction.reply(res);
 				return;
 			}
 			if (interaction.options.getString("type") === "legend") {
+				logger.info(`getting a random legend`);
 				res = wheel_data.apex.characters[Math.floor(Math.random() * wheel_data.apex.characters.length)];
+				logger.debug(`picked: ${res}`);
 				interaction.reply(res);
 				return;
 			}
+			logger.trace("Unreachable code reached")
 		}
 		if (interaction.options.getSubcommand() === "dropspot") {
 			const chosenMap = interaction.options.getString("map") as "Worlds Edge" | "Storm Point" | "King's Canyon";
-
+			logger.info(`getting a random dropspot`);
 			res = wheel_data.apex.Maps[chosenMap][Math.floor(Math.random() * wheel_data.apex.Maps[chosenMap].length)];
+			logger.debug(`picked: ${res}`);
 			interaction.reply(res);
 			return;
 		}
 		//const secondaryCat = msg.args[1];
 		if (interaction.options.getSubcommand() === "map") {
 			await interaction.deferReply();
-			const response = await axios.get(`https://api.mozambiquehe.re/maprotation?version=2&auth=${config.ApexStatusToken}`).catch(error => {
+			const response = await axios.get(`https://api.mozambiquehe.re/maprotation?version=2&auth=${config.apexStatusToken}`).catch(error => {
 				console.error(error);
 			});
 			if (!response) {
-				console.log("Axios request returned void");
+				logger.info("Axios request returned void");
 				return;
 			}
 			const data: API_Res = response.data;
-			const MapEmbed = new EmbedBuilder().setTitle("Current Map Rotation").setURL("https://apexlegendsstatus.com/current-map")
+			const MapEmbed = new EmbedBuilder().setTitle("Current Map Rotation").setURL("https://apexlegendsstatus.com/current-map");
 
 			if (interaction.options.getString("gamemode") === "pubs") {
 				const remainingTimer =
@@ -133,7 +143,6 @@ const cmd: Command = {
 	},
 };
 export default cmd;
-
 
 type MapAssetLink = `https://apexlegendsstatus.com/assets/maps/${string}.png`;
 

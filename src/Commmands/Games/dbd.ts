@@ -6,6 +6,8 @@ import Jimp from "jimp";
 import config from "../../../config.json";
 import { dbd } from "./game-data.json";
 const api_base = `https://dbd.tricky.lol/api/`;
+import { logging } from "../../Structures/Helpers/Logging";
+const logger = logging.getLogger("Commands.Games.DBD");
 
 const cmd: Command = {
 	displayName: "dbd",
@@ -21,7 +23,7 @@ const cmd: Command = {
 				console.error(error);
 			});
 			if (!response) {
-				console.log("Axios request returned void");
+				logger.info("Axios request returned void");
 				return;
 			}
 			const shrine_res: shrine_result = response.data;
@@ -30,13 +32,13 @@ const cmd: Command = {
 				///@ts-ignore
 				let perkData = dbd.perks.find(element => element.api_name === id); // as perkInfo_result;
 				if (!perkData) {
-					console.log(`Perk ID not found: ${id}`);
+					logger.info(`Perk ID not found: ${id}`);
 					return false;
 				}
 
 				//"R:\\Programming\\testing-and-scripts\\PerkIcons\\IconPerks_scourgeHookFloodsOfRage.png"
 				let value = {
-					icon_path: config.shrine_img_paths.icon_folder + perkData.path,
+					icon_path: config.shrineImgPaths.iconFolder + perkData.path,
 					//gets written later
 					icon: undefined,
 					x: 0,
@@ -70,9 +72,9 @@ const cmd: Command = {
 				.setTitle("Current Shrine Rotation")
 				.setFooter({ text: `The shrine will reset at: ` })
 				.setTimestamp(shrine_res.end * 1000);
-			const shrine_img = await MakeShrineImage(config.shrine_img_paths, perks[0], perks[1]!, perks[2]!, perks[3]!);
+			const shrine_img = await MakeShrineImage(config.shrineImgPaths, perks[0], perks[1]!, perks[2]!, perks[3]!);
 			//Saves the image into the file system
-			await shrine_img.writeAsync(config.shrine_img_paths.end_path);
+			await shrine_img.writeAsync(config.shrineImgPaths.endPath);
 			const file = new AttachmentBuilder("./current_shrine.png");
 			ShrineEmbed.setImage("attachment://current_shrine.png");
 			await interaction.editReply({
@@ -124,10 +126,11 @@ interface shrine_result {
 // }
 interface PathsOBJ {
 	background: string;
-	Boldfont: string;
-	lightfont: string;
-	perkIcon_bg: string;
-	end_path: string;
+	boldFont: string;
+	lightFont: string;
+	perkIconBackground: string;
+	endPath: string;
+	iconFolder: string;
 }
 interface perk {
 	icon_path: string;
@@ -142,10 +145,10 @@ function isPerksArray(array: (perk | false)[]): array is perk[] {
 }
 async function MakeShrineImage(bg_paths: PathsOBJ, perk1: perk, perk2: perk, perk3: perk, perk4: perk): Promise<Jimp> {
 	const background_image = await Jimp.read(bg_paths.background);
-	const Boldfont = await Jimp.loadFont(bg_paths.Boldfont);
-	const lightfont = await Jimp.loadFont(bg_paths.lightfont);
+	const Boldfont = await Jimp.loadFont(bg_paths.boldFont);
+	const lightfont = await Jimp.loadFont(bg_paths.lightFont);
 	// reads the watermark image
-	let perk_icon_bg = await Jimp.read(bg_paths.perkIcon_bg);
+	let perk_icon_bg = await Jimp.read(bg_paths.perkIconBackground);
 	// resizes the watermark image
 	perk_icon_bg = await perk_icon_bg.resize(400, 400);
 	// reads the image
