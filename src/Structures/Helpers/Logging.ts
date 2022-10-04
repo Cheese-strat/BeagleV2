@@ -9,6 +9,12 @@ export class Logger {
 	private FileLogger: Console = new console.Console({ stdout: output, stderr: errorOutput });
 	constructor() {
 		if (this.registered) return this;
+		// Bind the logging functions
+		this.debug = this.debug.bind(this);
+		this.info = this.info.bind(this);
+		this.warn = this.warn.bind(this);
+		this.error = this.error.bind(this);
+		this.errorUncaught = this.errorUncaught.bind(this);
 		this.registered = true;
 		return this;
 	}
