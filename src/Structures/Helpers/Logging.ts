@@ -100,7 +100,7 @@ export class Logger {
 		if (error.stack) {
 			const cla = error.stack.split("\n");
 			let idx = 1;
-			while (idx < cla.length && cla[idx].includes("at Logger.Object.")) idx++;
+			while (idx < cla.length && cla[idx].includes("at Logger.")) idx++;
 			if (idx < cla.length) {
 				logEntry.location = cla[idx].slice(cla[idx].indexOf("at ") + 3, cla[idx].length);
 			}

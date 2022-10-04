@@ -32,7 +32,7 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 		this.once("ready", () => {
 			this.music.init(this.user!.id);
 			logger.info(`Logged in as ${this.user!.tag}`);
-			["uncaughtException", "warning", "unhandledRejection"].forEach(p => process.on(p, logger.error));
+			
 		});
 		this.music.on("nodeConnect", node => {
 			logger.info(`Node "${node.options.identifier}" connected.`);
@@ -48,7 +48,7 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 			const command = this.GuildCommandList.get(interaction.commandName);
 			if (command) {
 				logger.info(`Running Command ${command.displayName}`)
-				await command.execute(interaction, this as BeagleClient<true>);
+				await command.execute(interaction, this as BeagleClient<true>).catch(logger.WarnUncaught)
 				logger.info(`Completed Command: ${command.displayName}`);
 			}
 		});
