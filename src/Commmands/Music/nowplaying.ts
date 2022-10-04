@@ -2,7 +2,6 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import Command from "src/Structures/Command";
 import { logging } from "../../Structures/Helpers/Logging";
-const logger = logging.getLogger("Commands.Music.nowplaying");
 
 const cmd: Command = {
 	displayName: "nowplaying",
@@ -11,7 +10,7 @@ const cmd: Command = {
 	async execute(interaction: ChatInputCommandInteraction<"cached" | "raw">, Beagle) {
 		let member = interaction.member;
 		if (!member || "joined_at" in member) {
-			logger.debug("member not cached");
+			logging.debug("member not cached");
 			const guild = await Beagle.guilds.fetch(interaction.guildId!);
 			member = await guild.members.fetch(interaction.user.id);
 		}
@@ -51,7 +50,7 @@ const cmd: Command = {
 		}
 
 		let duration = output.join(", ");
-		logger.info(duration);
+		logging.info(duration);
 		const Embed = new EmbedBuilder();
 		Embed.addFields([
 			{ name: "Author: ", value: Track.author!, inline: false },

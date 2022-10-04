@@ -6,7 +6,7 @@ import Command from "./Command";
 import SlashManager from "./Helpers/SlashManager";
 import path from "path";
 import { logging } from "./Helpers/Logging";
-const logger = logging.getLogger("Client.base");
+
 export default class BeagleClient<t extends boolean> extends Client<t> {
 	music: Manager;
 	GuildCommandList: Map<string, Command>;
@@ -31,25 +31,32 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 		});
 		this.once("ready", () => {
 			this.music.init(this.user!.id);
-			logger.info(`Logged in as ${this.user!.tag}`);
-			
+			logging.info(`Logged in as ${this.user!.tag}`);
 		});
 		this.music.on("nodeConnect", node => {
-			logger.info(`Node "${node.options.identifier}" connected.`);
+			logging.info(`Node "${node.options.identifier}" connected.`);
 		});
 
 		this.music.on("nodeError", (node, error) => {
-			logger.info(`Node "${node.options.identifier}" encountered an error: ${error.message}.`);
+			logging.info(`Node "${node.options.identifier}" encountered an error: ${error.message}.`);
 		});
 		this.on("interactionCreate", async interaction => {
-			if (!interaction.isChatInputCommand()) return;			
+			if (!interaction.isChatInputCommand()) return;
 			if (!interaction.inGuild()) return;
 
 			const command = this.GuildCommandList.get(interaction.commandName);
 			if (command) {
-				logger.info(`Running Command ${command.displayName}`)
-				await command.execute(interaction, this as BeagleClient<true>).catch(logger.WarnUncaught)
-				logger.info(`Completed Command: ${command.displayName}`);
+				try {
+					logging.info(`Running Command ${command.displayName}`);
+					await command.execute(interaction, this as BeagleClient<true>).catch(logging.errorUncaught);
+					logging.info(`Completed Command: ${command.displayName}`);
+				} catch (error) {
+					if (error instanceof Error) {
+						logging.errorUncaught(error);
+					} else {
+						logging.error(`There was an error in a command error was of type: ${typeof error}`)
+					}
+				}
 			}
 		});
 		//this.music.on("trackStart", (player, track) => {
@@ -67,7 +74,7 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 		});
 	}
 	async startup(): Promise<void> {
-		logger.info("logging in...");
+		logging.info("logging in...");
 		// the path given to this is incorrect so that when it is used in /Helpers is correctly paths, needs to check absolute paths in future
 		SlashManager(this as BeagleClient<false>, path.join(this.srcPath, "/Commmands"));
 		super.login(config.token);

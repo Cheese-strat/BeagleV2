@@ -3,7 +3,6 @@ import { ChatInputCommandInteraction } from "discord.js";
 import { Player } from "erela.js";
 import Command from "src/Structures/Command";
 import { logging } from "../../Structures/Helpers/Logging";
-const logger = logging.getLogger("Commands.Music.play");
 
 const cmd: Command = {
 	displayName: "Play",
@@ -25,7 +24,7 @@ const cmd: Command = {
 				return;
 			}
 		} catch (err: any) {
-			logger.info(err);
+			logging.info(err);
 			interaction.reply(`there was an error while searching`);
 			return;
 		}

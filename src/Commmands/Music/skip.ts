@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import Command from "../../Structures/Command";
 import { logging } from "../../Structures/Helpers/Logging";
-const logger = logging.getLogger("Commands.Music.skip");
 
 const cmd: Command = {
 	displayName: "Skip",
@@ -13,7 +12,7 @@ const cmd: Command = {
 		//TODO rewrite as if else chain
 		let member = interaction.member;
 		if (!member || "joined_at" in member) {
-			logger.debug("");
+			logging.debug("");
 			const guild = await Beagle.guilds.fetch(interaction.guildId!);
 			member = await guild.members.fetch(interaction.user.id);
 		}

@@ -7,7 +7,6 @@ import config from "../../../config.json";
 import { dbd } from "./game-data.json";
 const api_base = `https://dbd.tricky.lol/api/`;
 import { logging } from "../../Structures/Helpers/Logging";
-const logger = logging.getLogger("Commands.Games.DBD");
 
 const cmd: Command = {
 	displayName: "dbd",
@@ -19,9 +18,10 @@ const cmd: Command = {
 	async execute(interaction: ChatInputCommandInteraction) {
 		if (interaction.options.getSubcommand() === `shrine`) {
 			await interaction.deferReply();
-			const response = await axios.get(`${api_base}shrine`).catch(logger.errorUncaught);
+			logging.info(`Deferred reply`);
+			const response = await axios.get(`${api_base}shrine`).catch(logging.errorUncaught);
 			if (!response) {
-				logger.info("Axios request returned void");
+				logging.info("Axios request returned void");
 				return;
 			}
 			const shrine_res: shrine_result = response.data;
@@ -30,7 +30,7 @@ const cmd: Command = {
 				///@ts-ignore
 				let perkData = dbd.perks.find(element => element.api_name === id); // as perkInfo_result;
 				if (!perkData) {
-					logger.info(`Perk ID not found: ${id}`);
+					logging.info(`Perk ID not found: ${id}`);
 					return false;
 				}
 
@@ -63,32 +63,39 @@ const cmd: Command = {
 				return value;
 			});
 			if (!isPerksArray(perks)) {
+				logging.error(`The perk array didnt contain all perks`);
 				await interaction.editReply("Sorry there was a problem with the command");
 				return;
 			}
+
+			logging.info(`Building Embed`);		
 			const ShrineEmbed = new EmbedBuilder()
 				.setTitle("Current Shrine Rotation")
 				.setFooter({ text: `The shrine will reset at: ` })
 				.setTimestamp(shrine_res.end * 1000);
-			const shrine_img = await MakeShrineImage(config.shrineImgPaths, perks[0], perks[1]!, perks[2]!, perks[3]!).catch(logger.errorUncaught);
+			logging.info(`Making the shrine Image`);
+
+			const shrine_img = await MakeShrineImage(config.shrineImgPaths, perks[0], perks[1]!, perks[2]!, perks[3]!).catch(logging.errorUncaught);
 			if (!shrine_img) {
-				logger.error(`shrine image failed to generate`);
+				logging.error(`shrine image failed to generate`);
 				interaction.reply(`a biblioteca é engraçada.`);
 				return;
 			}
-			logger.debug(`jimp obj: ${shrine_img}`);
+			logging.debug(`jimp obj: ${shrine_img}`);
 			//Saves the image into the file system
-			await shrine_img.writeAsync(config.shrineImgPaths.endPath).catch(logger.errorUncaught);
-			logger.info(`Written to file`);
+			await shrine_img.writeAsync(config.shrineImgPaths.endPath).catch(logging.errorUncaught);
+			logging.info(`Written to file`);
 			const file = new AttachmentBuilder("./" + config.shrineImgPaths.endPath);
-			logger.debug(`file: ${file}`);
+			logging.debug(`file: ${file}`);
 			ShrineEmbed.setImage(`attachment://${config.shrineImgPaths.endPath}`);
-			logger.info(`Set the Image, attempting to edit reply`);
-			await interaction.editReply({
-				embeds: [ShrineEmbed],
-				files: [file],
-			}).catch(logger.errorUncaught);
-			logger.info(`Finished editing the reply`);
+			logging.info(`Set the Image, attempting to edit reply`);
+			await interaction
+				.editReply({
+					embeds: [ShrineEmbed],
+					files: [file],
+				})
+				.catch(logging.errorUncaught);
+			logging.info(`Finished editing the reply`);
 			return;
 		}
 		interaction.reply(`a biblioteca é engraçada.`);
@@ -152,13 +159,14 @@ function isPerksArray(array: (perk | false)[]): array is perk[] {
 	return !array.includes(false);
 }
 async function MakeShrineImage(bg_paths: PathsOBJ, perk1: perk, perk2: perk, perk3: perk, perk4: perk): Promise<null | Jimp> {
-	const background_image = await Jimp.read(bg_paths.background).catch(logger.errorUncaught);
-	const Boldfont = await Jimp.loadFont(bg_paths.boldFont).catch(logger.errorUncaught);
-	const lightfont = await Jimp.loadFont(bg_paths.lightFont).catch(logger.errorUncaught);
+	const background_image = await Jimp.read(bg_paths.background).catch(logging.errorUncaught);
+	const Boldfont = await Jimp.loadFont(bg_paths.boldFont).catch(logging.errorUncaught);
+	const lightfont = await Jimp.loadFont(bg_paths.lightFont).catch(logging.errorUncaught);
 	// reads the watermark image
-	let perk_icon_bg = await Jimp.read(bg_paths.perkIconBackground).catch(logger.errorUncaught);
+	let perk_icon_bg = await Jimp.read(bg_paths.perkIconBackground).catch(logging.errorUncaught);
+	logging.info("Files loaded");
 	if (!(background_image && perk_icon_bg && Boldfont && lightfont)) {
-		logger.error("Image not found");
+		logging.error("Image not found");
 		return null;
 	}
 	// resizes the watermark image
@@ -167,13 +175,13 @@ async function MakeShrineImage(bg_paths: PathsOBJ, perk1: perk, perk2: perk, per
 
 	//perk1 top left
 	perk1.icon = await Jimp.read(perk1.icon_path);
-	logger.debug(`icon 1: ${perk1.icon}`);
+	logging.debug(`icon 1: ${perk1.icon}`);
 	if (!perk1.icon) {
-		logger.error("Image not found");
+		logging.error("Image not found");
 		return null;
 	}
-	background_image.print(Boldfont, perk1.x + 220, perk1.y, perk1.perkname);
-	if (perk1.text !== "") background_image.print(lightfont, perk1.x + 270, perk1.y + 50, perk1.text);
+	background_image.print(Boldfont, perk1.x + 250, perk1.y, perk1.perkname);
+	if (perk1.text !== "") background_image.print(lightfont, perk1.x + 300, perk1.y + 50, perk1.text);
 
 	background_image.composite(perk_icon_bg, perk1.x, perk1.y, {
 		mode: Jimp.BLEND_SOURCE_OVER,
@@ -190,13 +198,13 @@ async function MakeShrineImage(bg_paths: PathsOBJ, perk1: perk, perk2: perk, per
 
 	//perk2 bottom left
 	perk2.icon = await Jimp.read(perk2.icon_path);
-	logger.debug(`icon 2: ${perk2.icon}`);
+	logging.debug(`icon 2: ${perk2.icon}`);
 	if (!perk2.icon) {
-		logger.error("Perk 2, icon not found");
+		logging.error("Perk 2, icon not found");
 		return null;
 	}
-	background_image.print(Boldfont, perk2.x + 220, perk2.y, perk2.perkname);
-	if (perk2.text !== "") background_image.print(lightfont, perk2.x + 270, perk2.y + 50, perk2.text);
+	background_image.print(Boldfont, perk2.x + 250, perk2.y, perk2.perkname);
+	if (perk2.text !== "") background_image.print(lightfont, perk2.x + 300, perk2.y + 50, perk2.text);
 
 	background_image.composite(perk_icon_bg, perk2.x, perk2.y, {
 		mode: Jimp.BLEND_SOURCE_OVER,
@@ -213,9 +221,9 @@ async function MakeShrineImage(bg_paths: PathsOBJ, perk1: perk, perk2: perk, per
 
 	//perk3 top right
 	perk3.icon = await Jimp.read(perk3.icon_path);
-	logger.debug(`icon 3: ${perk3.icon}`);
+	logging.debug(`icon 3: ${perk3.icon}`);
 	if (!perk3.icon) {
-		logger.error("Perk 3, icon not found");
+		logging.error("Perk 3, icon not found");
 		return null;
 	}
 	background_image.print(
@@ -259,9 +267,9 @@ async function MakeShrineImage(bg_paths: PathsOBJ, perk1: perk, perk2: perk, per
 
 	//perk4 bottom right
 	perk4.icon = await Jimp.read(perk4.icon_path);
-	logger.debug(`icon 4: ${perk4.icon}`);
+	logging.debug(`icon 4: ${perk4.icon}`);
 	if (!perk4.icon) {
-		logger.error("Perk 4, icon not found");
+		logging.error("Perk 4, icon not found");
 		return null;
 	}
 	background_image.print(
@@ -303,6 +311,6 @@ async function MakeShrineImage(bg_paths: PathsOBJ, perk1: perk, perk2: perk, per
 		opacityDest: 1,
 		opacitySource: 1,
 	});
-	logger.info("Made shrine Image");
+	logging.info("Made shrine Image");
 	return background_image;
 }
