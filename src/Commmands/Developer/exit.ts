@@ -9,8 +9,7 @@ const cmd: Command = {
 	build: new SlashCommandBuilder().setName("exit").setDescription("Shutdown the bot, mostly for debugging"),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction, Beagle) {
-		if (Math.random() >0.5) throw new Error("You hit the Unlucky chance")
-		if (developers.includes(interaction.user.id)) {
+		if (!developers.includes(interaction.user.id)) {
 			logging.debug(`User ID invalid`);
 			await interaction.reply("you do not have perms");
 			return;

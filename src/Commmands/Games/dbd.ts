@@ -2,10 +2,11 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { AttachmentBuilder, ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import Command from "src/Structures/Command";
 import axios from "axios";
+import { HTMLElement, NodeType, parse } from "node-html-parser";
 import Jimp from "jimp";
 import config from "../../../config.json";
 import { dbd } from "./game-data.json";
-const api_base = `https://dbd.tricky.lol/api/`;
+const trickyAPIBase = `https://dbd.tricky.lol/api/`;
 import { logging } from "../../Structures/Helpers/Logging";
 
 const cmd: Command = {
@@ -16,21 +17,39 @@ const cmd: Command = {
 		.addSubcommand(subcommand => subcommand.setName("shrine").setDescription("Get the currently active shrine")),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction) {
+		logging.debug(interaction.options.data.map(x => JSON.stringify(x)).join("\n"));
 		if (interaction.options.getSubcommand() === `shrine`) {
-			await interaction.deferReply();
+			interaction.deferReply();
 			logging.info(`Deferred reply`);
-			const response = await axios.get(`${api_base}shrine`).catch(logging.errorUncaught);
+
+			const response = await axios.get(`${trickyAPIBase}shrine`).catch(logging.errorUncaught);
 			if (!response) {
 				logging.info("Axios request returned void");
 				return;
 			}
 			const shrine_res: shrine_result = response.data;
-
+			//if the tricky api has expired and not updated, get the perk names from the wiki
+			let WikiSOS: WikiOBJ | undefined = undefined;
+			if (shrine_res.end * 1000 < Date.now()) {
+				let res = await GetPerkNames();
+				if (!res) logging.error("Something went wrong look up ^");
+				else WikiSOS = res;
+			}
 			let perks = shrine_res.perks.map(({ id }, index) => {
-				///@ts-ignore
-				let perkData = dbd.perks.find(element => element.api_name === id); // as perkInfo_result;
+				let perkData;
+				if (WikiSOS) {
+					perkData = dbd.perks.find(element => {
+						//@ts-ignore dont know how to fix this
+						return WikiSOS.perks[index].toLowerCase() === element.name.toLowerCase();
+					});
+				} else {
+					perkData = dbd.perks.find(element => {
+						return element.api_name.toLowerCase() === id.toLowerCase();
+					}); // as perkInfo_result;
+				}
+
 				if (!perkData) {
-					logging.info(`Perk ID not found: ${id}`);
+					logging.info(`Perk ID not found: ${id}${WikiSOS ? ` or ${WikiSOS.perks[index]}` : ""}`);
 					return false;
 				}
 
@@ -64,15 +83,17 @@ const cmd: Command = {
 			});
 			if (!isPerksArray(perks)) {
 				logging.error(`The perk array didnt contain all perks`);
-				await interaction.editReply("Sorry there was a problem with the command");
+				await interaction.editReply("Sorry I couldnt Identify some of the perks");
 				return;
 			}
 
-			logging.info(`Building Embed`);		
-			const ShrineEmbed = new EmbedBuilder()
-				.setTitle("Current Shrine Rotation")
-				.setFooter({ text: `The shrine will reset at: ` })
-				.setTimestamp(shrine_res.end * 1000);
+			logging.info(`Building Embed`);
+			const ShrineEmbed = new EmbedBuilder().setTitle("Current Shrine Rotation");
+			if (!WikiSOS) {
+				ShrineEmbed.setFooter({ text: `The shrine will reset at: ` }).setTimestamp(shrine_res.end * 1000);
+			} else {
+				ShrineEmbed.setFooter({ text: `The shrine will reset in: ${WikiSOS.timeoutStr}` });
+			}
 			logging.info(`Making the shrine Image`);
 
 			const shrine_img = await MakeShrineImage(config.shrineImgPaths, perks[0], perks[1]!, perks[2]!, perks[3]!).catch(logging.errorUncaught);
@@ -313,4 +334,38 @@ async function MakeShrineImage(bg_paths: PathsOBJ, perk1: perk, perk2: perk, per
 	});
 	logging.info("Made shrine Image");
 	return background_image;
+}
+interface WikiOBJ {
+	perks: string[];
+	timeoutStr: string;
+}
+async function GetPerkNames(): Promise<false | WikiOBJ> {
+	///@ts-ignore
+	const response = await axios.get(`https://deadbydaylight.fandom.com/wiki/Shrines_of_Secrets_Archive`);
+	if (!response) {
+		console.info("Axios request returned void");
+		return false;
+	}
+	try {
+		const root = parse(response.data);
+
+		const sos = root.querySelector("#mw-content-text > div > center:nth-child(6) > table > tbody > tr:nth-child(2) > td > div");
+		if (!sos) {
+			logging.error("no sos found");
+			return false;
+		}
+		var arr = sos.querySelectorAll(".sosPerk").map(node => {
+			let elem = node.childNodes.filter(myNode => myNode.nodeType === NodeType.ELEMENT_NODE)[0] as HTMLElement;
+			return elem.attrs.title;
+		});
+		var shrineTimout = root.querySelector("#mw-content-text > div > center:nth-child(6) > table > tbody > tr:nth-child(4) > th > span");
+		if (!shrineTimout) {
+			logging.error("no timeout found");
+			return false;
+		}
+	} catch (err) {
+		if (err instanceof Error) logging.errorUncaught(err);
+		throw new Error(`err was of type: ${typeof err}`);
+	}
+	return { perks: arr, timeoutStr: shrineTimout.innerText };
 }

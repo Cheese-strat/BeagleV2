@@ -4,6 +4,7 @@ import Command from "src/Structures/Command";
 import { transpile } from "typescript";
 import { inspect } from "util";
 import { logging } from "../../Structures/Helpers/Logging";
+import { developers } from "../../../config.json";
 
 const cmd: Command = {
 	displayName: "Eval",
@@ -13,7 +14,6 @@ const cmd: Command = {
 		.addStringOption(option => option.setName("input").setDescription("the code to run").setRequired(true)),
 	cooldown: 2,
 	async execute(interaction: ChatInputCommandInteraction, Beagle) {
-		
 		async function clean(Input: any) {
 			logging.debug(`Input type: ${typeof Input}, toString value: ${Input.toString()}`);
 			if (Input instanceof Promise) Input = await Input;
@@ -23,8 +23,9 @@ const cmd: Command = {
 			logging.debug(`formatted string value: ${Input}`);
 			return Input;
 		}
-		if (interaction.user.id !== "625149330348703744") {
-			interaction.reply("you do not have perms");
+		if (!developers.includes(interaction.user.id)) {
+			logging.debug(`User ID invalid`);
+			await interaction.reply("you do not have perms");
 			return;
 		}
 		let Input = interaction.options.getString("input");
