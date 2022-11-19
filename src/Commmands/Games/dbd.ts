@@ -19,7 +19,7 @@ const cmd: Command = {
 	async execute(interaction: ChatInputCommandInteraction) {
 		logging.debug(interaction.options.data.map(x => JSON.stringify(x)).join("\n"));
 		if (interaction.options.getSubcommand() === `shrine`) {
-			interaction.deferReply();
+			await interaction.deferReply();
 			logging.info(`Deferred reply`);
 
 			const response = await axios.get(`${trickyAPIBase}shrine`).catch(logging.errorUncaught);
@@ -43,8 +43,10 @@ const cmd: Command = {
 						return WikiSOS.perks[index].toLowerCase() === element.name.toLowerCase();
 					});
 				} else {
+					
 					perkData = dbd.perks.find(element => {
-						return element.api_name.toLowerCase() === id.toLowerCase();
+						
+						return element.api_name.toLowerCase() === APIperkmap[id] || (element.api_name.toLowerCase() === id.toLowerCase());
 					}); // as perkInfo_result;
 				}
 
@@ -99,7 +101,7 @@ const cmd: Command = {
 			const shrine_img = await MakeShrineImage(config.shrineImgPaths, perks[0], perks[1]!, perks[2]!, perks[3]!).catch(logging.errorUncaught);
 			if (!shrine_img) {
 				logging.error(`shrine image failed to generate`);
-				interaction.reply(`a biblioteca é engraçada.`);
+				interaction.editReply(`a biblioteca é engraçada.`);
 				return;
 			}
 			logging.debug(`jimp obj: ${shrine_img}`);
@@ -369,3 +371,7 @@ async function GetPerkNames(): Promise<false | WikiOBJ> {
 	}
 	return { perks: arr, timeoutStr: shrineTimout.innerText };
 }
+
+ const APIperkmap:{[mapval: string]:string} = {
+	"Sprint_Burst":"sprintburst"
+ }

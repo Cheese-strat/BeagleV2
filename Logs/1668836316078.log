@@ -1,0 +1,39 @@
+Info: Object.<anonymous> (H:\Programming\BeagleV2\dist\src\main.js:11:19) creating BeagleClient
+Info: Object.<anonymous> (H:\Programming\BeagleV2\dist\src\main.js:15:19) initializing Discord bot
+Info: BeagleClient.startup (H:\Programming\BeagleV2\dist\src\Structures\Client.js:71:27) logging in...
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Developer\eval.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Developer\exit.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Games\apex.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Misc\ping.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Music\nowplaying.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Music\play.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Music\queue.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Music\skip.js
+Info: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:50:23) Started refreshing application (/) commands.
+Info: H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:53:39 Successfully registered application commands.
+Info: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:55:23) Successfully reloaded application (/) commands.
+Info: BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:35:31) Logged in as Beagle#9602
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:51:39) Running Command dbd
+Debug: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:23:27) {"name":"shrine","type":1,"options":[]}
+Info: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:26:31) Deferred reply
+Info: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:88:31) Building Embed
+Info: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:96:31) Making the shrine Image
+Info: MakeShrineImage (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:132:23) Files loaded
+Debug: MakeShrineImage (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:139:23) icon 1: [object Jimp]
+Debug: MakeShrineImage (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:159:23) icon 2: [object Jimp]
+Debug: MakeShrineImage (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:179:23) icon 3: [object Jimp]
+Debug: MakeShrineImage (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:207:23) icon 4: [object Jimp]
+Info: MakeShrineImage (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:234:23) Made shrine Image
+Debug: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:103:31) jimp obj: [object Jimp]
+Info: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:105:31) Written to file
+Debug: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:107:31) file: [object Object]
+Info: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:109:31) Set the Image, attempting to edit reply
+Info: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:116:31) Finished editing the reply
+Info: BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:53:39) Completed Command: dbd
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: Unable to connect after 5 attempts..

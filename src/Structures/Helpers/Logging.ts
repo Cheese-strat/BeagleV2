@@ -1,6 +1,7 @@
 import { createWriteStream } from "fs";
-const output = createWriteStream("./stdout.log");
-const errorOutput = createWriteStream("./stderr.log");
+const launchstamp = Date.now()
+const output = createWriteStream(`./Logs/${launchstamp}_out.log`);
+const errorOutput = createWriteStream(`./Logs/${launchstamp}_err.log`);
 // Custom simple logger
 
 export class Logger {

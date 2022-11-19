@@ -1,0 +1,35 @@
+Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:84:35) The perk array didnt contain all perks
+Error [InteractionNotReplied]: The reply to this interaction has not been sent or deferred.
+    at ChatInputCommandInteraction.editReply (H:\Programming\BeagleV2\node_modules\discord.js\src\structures\interfaces\InteractionResponses.js:150:48)
+    at Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:85:35)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:52:21) {
+  code: 'InteractionNotReplied'
+}
+ist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Games\apex.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Misc\ping.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Music\nowplaying.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Music\play.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Music\queue.js
+Debug: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:43:31) H:\Programming\BeagleV2\dist\src\Commmands\Music\skip.js
+Info: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:50:23) Started refreshing application (/) commands.
+Info: H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:53:39 Successfully registered application commands.
+Info: SlashManager (H:\Programming\BeagleV2\dist\src\Structures\Helpers\SlashManager.js:55:23) Successfully reloaded application (/) commands.
+Info: BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:35:31) Logged in as Beagle#9602
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: connect ECONNREFUSED 127.0.0.1:2333.
+Info: Manager.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:41:31) Node "127.0.0.1" encountered an error: Unable to connect after 5 attempts..
+Info: BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:51:39) Running Command ping
+Debug: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Misc\ping.js:12:27) Message ID: 1043393843246145546, Channel ID: 889514312455036968
+Debug: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Misc\ping.js:14:27) Reply Timestamp: 1668834877550, Interaction Timestamp: 1668834876320
+Info: BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:53:39) Completed Command: ping
+Info: BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:51:39) Running Command dbd
+Debug: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:23:27) {"name":"shrine","type":1,"options":[]}
+Info: Object.execute (H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:26:31) Deferred reply
+Info: H:\Programming\BeagleV2\dist\src\Commmands\Games\dbd.js:54:39 Perk ID not found: Sprint_Burst
+Error: processTicksAndRejections (node:internal/process/task_queues:96:5) The reply to this interaction has not been sent or deferred.
+Info: BeagleClient.<anonymous> (H:\Programming\BeagleV2\dist\src\Structures\Client.js:53:39) Completed Command: dbd
