@@ -12,16 +12,19 @@ const cmd: Command = {
 		.setDescription("Spins the wheel for your favourite game!"),
 
 	async execute(interaction: ChatInputCommandInteraction) {
+		await interaction.reply(`Starting up`);
 		logging.info("starting minecraft server");
+
 		try {
 			exec("startMcServer.sh")
 		} catch (error) {
 			logging.error((error as Error).message);
-			interaction.reply("Something went wrong, please message paul or ben")
+			interaction.editReply("Something went wrong, please message paul or ben");
 			return
 		}
+
 		logging.info("server started");
-		interaction.reply(`Starting up now :)`);
+		interaction.editReply("server started");
 		return;
 	},
 };
