@@ -5,7 +5,7 @@ import { exec } from "child_process"
 import { logging } from "../../Structures/Helpers/Logging";
 
 const cmd: Command = {
-	displayName: "Server",
+	displayName: "Startup",
 	cooldown: 2,
 	build: new SlashCommandBuilder()
 		.setName("startup")
