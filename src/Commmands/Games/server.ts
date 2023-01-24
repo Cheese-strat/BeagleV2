@@ -16,7 +16,7 @@ const cmd: Command = {
 		logging.info("starting minecraft server");
 
 		try {
-			execSync("startMcServer.sh")
+			execSync("/usr/local/bin/startMcServer.sh")
 		} catch (error) {
 			logging.error((error as Error).message);
 			interaction.editReply("Something went wrong, please message paul or ben");
