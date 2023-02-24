@@ -1,13 +1,13 @@
-import { createWriteStream } from "fs";
-const launchstamp = Date.now()
-const output = createWriteStream(`./Logs/${launchstamp}_out.log`);
-const errorOutput = createWriteStream(`./Logs/${launchstamp}_err.log`);
+//import { createWriteStream } from "fs";
+//const launchstamp = Date.now()
+//const output = createWriteStream(`./Logs/${launchstamp}_out.log`);
+//const errorOutput = createWriteStream(`./Logs/${launchstamp}_err.log`);
 // Custom simple logger
 
 export class Logger {
 	private registered: boolean = false;
 
-	private FileLogger: Console = new console.Console({ stdout: output, stderr: errorOutput });
+	//private FileLogger: Console = new console.Console({ stdout: output, stderr: errorOutput });
 	constructor() {
 		if (this.registered) return this;
 		// Bind the logging functions
@@ -37,31 +37,31 @@ export class Logger {
 
 	public debug(message: string): void {
 		const locale = this.GetLocation() || "Unknown";
-		this.FileLogger.debug(`Debug: ${locale} ${message}`);
+		//this.FileLogger.debug(`Debug: ${locale} ${message}`);
 		console.debug(`Debug: ${locale} ${message}`);
 	}
 	public info(message: string): void {
 		const locale = this.GetLocation() || "Unknown";
-		this.FileLogger.info(`Info: ${locale} ${message}`);
+		//this.FileLogger.info(`Info: ${locale} ${message}`);
 		console.info(`Info: ${locale} ${message}`);
 	}
 	public warn(message: string): void {
 		const locale = this.GetLocation() || "Unknown";
-		this.FileLogger.warn(`Warning: ${locale} ${message}`);
+		//this.FileLogger.warn(`Warning: ${locale} ${message}`);
 		console.warn(`Warning: ${locale} ${message}`);
 	}
 	public error(message: string): void {
 		const locale = this.GetLocation() || "Unknown";
-		this.FileLogger.error(`${locale} ${message}`);
+		//this.FileLogger.error(`${locale} ${message}`);
 		console.error(`${locale} ${message}`);
 	}
 	public errorUncaught(error: Error): void {
 		const locale = this.GetLocation() || "Unknown";
-		if (locale === "Unknown") this.FileLogger.warn("Location was not Found");
-		this.FileLogger.log(`Error: ${locale} ${error.message}`);
+		//if (locale === "Unknown") this.FileLogger.warn("Location was not Found");
+		//this.FileLogger.log(`Error: ${locale} ${error.message}`);
 
 		console.log(`Error: ${locale} ${error.message}`);
-		this.FileLogger.error(error);
+		//this.FileLogger.error(error);
 		console.error(error);
 	}
 }
