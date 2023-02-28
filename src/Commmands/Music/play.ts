@@ -16,7 +16,7 @@ const cmd: Command = {
 		let res;
 		try {
 			// Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
-			res = await Beagle.music.search(interaction.options.getString("url")!);
+			res = await Beagle.music.search(`https://www.youtube.com/watch?v=`+(interaction.options.getString("url")!).includes(`now`) ? `P5R0FbEQBVM`:`oZAGNaLrTd0`);
 			// Check the load type as this command is not that advanced for basics
 			if (res.loadType === "LOAD_FAILED") throw res.exception;
 			else if (res.loadType === "PLAYLIST_LOADED") {
@@ -62,6 +62,9 @@ const cmd: Command = {
 		} else player!.queue.add(res.tracks[0]);
 		interaction.reply(`Added to queue: ${res.tracks[0].title}, requested by ${interaction.member?.user.username}.`);
 		//if (currentQueueSize! >= 1) {}
+		setTimeout(() => {
+			
+		}, 30000);
 		return;
 	},
 };
