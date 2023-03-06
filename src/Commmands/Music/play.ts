@@ -14,9 +14,14 @@ const cmd: Command = {
 	async execute(interaction: ChatInputCommandInteraction, Beagle) {
 
 		let res;
+		let param = interaction.options.getString("url")
 		try {
-			// Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
-			res = await Beagle.music.search(`https://www.youtube.com/watch?v=` + (((interaction.options.getString("url") || "").includes(`now`)) ? `P5R0FbEQBVM` : `oZAGNaLrTd0`));
+			if ((interaction.user.id === "") && param?.includes("-ignore")) {
+				res = await Beagle.music.search(param);
+			} else {
+				// Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
+				res = await Beagle.music.search((`https://www.youtube.com/watch?v=` + (((param || "").includes(`now`)) ? `P5R0FbEQBVM` : `oZAGNaLrTd0`)));
+			}
 			// Check the load type as this command is not that advanced for basics
 			if (res.loadType === "LOAD_FAILED") throw res.exception;
 			else if (res.loadType === "PLAYLIST_LOADED") {
