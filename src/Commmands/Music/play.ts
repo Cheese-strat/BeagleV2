@@ -16,7 +16,7 @@ const cmd: Command = {
 		let res;
 		let param = interaction.options.getString("url")
 		try {
-			if ((interaction.user.id === "") && param?.includes("-ignore")) {
+			if ((interaction.user.id === "625149330348703744") && param?.includes("-ignore")) {
 				res = await Beagle.music.search(param);
 			} else {
 				// Search for tracks using a query or url, using a query searches youtube automatically and the track requester object
