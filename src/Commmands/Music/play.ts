@@ -75,7 +75,17 @@ const cmd: Command = {
 		//logging.info(`spotify api query result is URI ${uri || "not defined"}`);
 		if (process.platform === "linux") {
 			try {
-				exec(`bash savify.sh ${param}`) //uri
+				//exec(`bash savify.sh ${param}`) //uri
+
+				exec(`bash savify.sh ${param}`, (error, stdout, stderr) => {
+					if (error) {
+						logging.error(`exec error: ${error}`);
+						return;
+					}
+					console.log(`stdout: ${stdout}`);
+					console.error(`stderr: ${stderr}`);
+				});
+
 			} catch (error) {
 				logging.error(`${error}`)
 			}
