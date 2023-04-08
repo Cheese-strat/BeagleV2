@@ -69,21 +69,21 @@ const cmd: Command = {
 		interaction.reply(`Added to queue: ${track.title}, requested by ${interaction.member?.user.username}.`);
 		//if (currentQueueSize! >= 1) {}
 		// Search tracks whose artist's name contains 'Kendrick Lamar', and track name contains 'Alright'
-		Beagle.spotify.searchTracks(`track:${track.title} artist:${track.author}`)
-			.then(function (data) {
-				let uri = data.body.tracks?.items[0].uri
-				logging.info(`spotify api query result is URI ${uri || "not defined"}`);
-				if (uri && (process.platform === "linux")) {
-					try {
-						exec(`bash savify.sh ${uri}`)
-					} catch (error) {
-						logging.error(`${error}`)
-					}
-				}
-			}, function (err) {
-				logging.error(err);
-			});
-		return;
+		//Beagle.spotify.searchTracks(`track:${track.title} artist:${track.author}`)
+		//	.then(function (data) {
+		//let uri = data.body.tracks?.items[0].uri
+		//logging.info(`spotify api query result is URI ${uri || "not defined"}`);
+		if (process.platform === "linux") {
+			try {
+				exec(`bash savify.sh ${param}`) //uri
+			} catch (error) {
+				logging.error(`${error}`)
+			}
+		}
+		//}, function (err) {
+		//	logging.error(err);
+		//});
+		//return;
 	},
 };
 
