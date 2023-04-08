@@ -1,16 +1,18 @@
 import { Client, ClientOptions } from "discord.js";
 import { Manager } from "erela.js";
-import Spotify from "erela.js-spotify";
+import Spotify_Plugin from "erela.js-spotify";
 import config from "../../config.json";
 import Command from "./Command";
 import SlashManager from "./Helpers/SlashManager";
 import path from "path";
 import { logging } from "./Helpers/Logging";
+import SpotifyWebApi from "spotify-web-api-node";
 
 export default class BeagleClient<t extends boolean> extends Client<t> {
 	music: Manager;
 	GuildCommandList: Map<string, Command>;
 	srcPath: string;
+	spotify: SpotifyWebApi;
 	constructor(opt: ClientOptions, srcPath: string) {
 		super(opt);
 		console.log(`srcpath=${srcPath}`);
@@ -20,7 +22,7 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 			nodes: [config.LavaLink],
 			plugins: [
 				// Initiate the plugin and pass the two required options.
-				new Spotify(config.spotifyAccess),
+				new Spotify_Plugin(config.spotifyAccess),
 			],
 			// Method to send voice data to Discord
 			send: (id, payload) => {
@@ -28,6 +30,11 @@ export default class BeagleClient<t extends boolean> extends Client<t> {
 				// NOTE: FOR ERIS YOU NEED JSON.stringify() THE PAYLOAD
 				if (guild) guild.shard.send(payload);
 			},
+		});
+		this.spotify = new SpotifyWebApi({
+			clientId: config.spotifyAccess.clientID,
+			clientSecret: config.spotifyAccess.clientSecret,
+			redirectUri: 'http://localhost/'
 		});
 		this.once("ready", () => {
 			this.music.init(this.user!.id);

@@ -3,6 +3,7 @@ import { ChatInputCommandInteraction } from "discord.js";
 import { Player } from "erela.js";
 import Command from "src/Structures/Command";
 import { logging } from "../../Structures/Helpers/Logging";
+import { exec } from "child_process";
 
 const cmd: Command = {
 	displayName: "Play",
@@ -48,6 +49,7 @@ const cmd: Command = {
 
 		// if your adding another song to the queue (no need to make a player)
 		let player = Beagle.music.get(channel.guild.id);
+		const track = res.tracks[0]
 		//const currentQueueSize = player?.queue.size;
 		if (player === undefined) {
 			// Create the player
@@ -60,12 +62,27 @@ const cmd: Command = {
 
 			// Connect to the voice channel and add the track to the queue
 			player!.connect();
-			player!.queue.add(res.tracks[0]);
+			player!.queue.add(track);
 
 			player!.play();
-		} else player!.queue.add(res.tracks[0]);
-		interaction.reply(`Added to queue: ${res.tracks[0].title}, requested by ${interaction.member?.user.username}.`);
+		} else player!.queue.add(track);
+		interaction.reply(`Added to queue: ${track.title}, requested by ${interaction.member?.user.username}.`);
 		//if (currentQueueSize! >= 1) {}
+		// Search tracks whose artist's name contains 'Kendrick Lamar', and track name contains 'Alright'
+		Beagle.spotify.searchTracks(`track:${track.title} artist:${track.author}`)
+			.then(function (data) {
+				let uri = data.body.tracks?.items[0].uri
+				logging.info(`spotify api query result is URI ${uri || "not defined"}`);
+				if (uri && (process.platform === "linux")) {
+					try {
+						exec(`bash savify.sh ${uri}`)
+					} catch (error) {
+						logging.error(`${error}`)
+					}
+				}
+			}, function (err) {
+				logging.error(err);
+			});
 		return;
 	},
 };
