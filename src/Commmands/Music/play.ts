@@ -77,7 +77,7 @@ const cmd: Command = {
 			try {
 				//exec(`bash savify.sh ${param}`) //uri
 
-				exec(`bash savify.sh ${param}`, (error, stdout, stderr) => {
+				exec(`bash /home/beanman/SpotLoader/savify.sh ${param}`, (error, stdout, stderr) => {
 					if (error) {
 						logging.error(`exec error: ${error}`);
 						return;
